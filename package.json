@@ -1,0 +1,25 @@
+{
+  "name": "json-stringify-pretty-compact",
+  "version": "1.0.0",
+  "author": "Simon Lydell",
+  "license": "MIT",
+  "description": "The best of both `JSON.stringify(obj)` and `JSON.stringify(obj, null, indent)`.",
+  "main": "index.js",
+  "repository": "lydell/json-stringify-pretty-compact",
+  "keywords": [
+    "JSON",
+    "stringify",
+    "pretty",
+    "print",
+    "pretty-print",
+    "compact",
+    "indent"
+  ],
+  "scripts": {
+    "test": "mocha"
+  },
+  "devDependencies": {
+    "mocha": "^2.0.1",
+    "chai": "^1.9.2"
+  }
+}
