@@ -13,7 +13,9 @@
     "print",
     "pretty-print",
     "compact",
-    "indent"
+    "indent",
+    "format",
+    "formatter"
   ],
   "scripts": {
     "test": "mocha"
