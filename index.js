@@ -6,7 +6,7 @@ function stringify(obj, options) {
   var indent = JSON.stringify([1], null, get(options, "indent", 2)).slice(2, -3)
   var maxLength = (indent === "" ? Infinity : get(options, "maxLength", 80))
 
-  return (function _stringify(obj, currentIndent, prev) {
+  return (function _stringify(obj, currentIndent, reserved) {
     if (obj && typeof obj.toJSON === "function") {
       obj = obj.toJSON()
     }
@@ -17,7 +17,7 @@ function stringify(obj, options) {
       return string
     }
 
-    var length = maxLength - currentIndent.length - prev
+    var length = maxLength - currentIndent.length - reserved
 
     if (string.length <= length) {
       var prettified = prettify(string)
@@ -30,16 +30,22 @@ function stringify(obj, options) {
       var nextIndent = currentIndent + indent
       var items = []
       var delimiters
+      var comma = function(array, index) {
+        return (index === array.length - 1 ? 0 : 1)
+      }
 
       if (Array.isArray(obj)) {
         for (var index = 0; index < obj.length; index++) {
-          items.push(_stringify(obj[index], nextIndent, 0) || "null")
+          items.push(
+            _stringify(obj[index], nextIndent, comma(obj, index)) || "null"
+          )
         }
         delimiters = "[]"
       } else {
-        Object.keys(obj).forEach(function(key) {
+        Object.keys(obj).forEach(function(key, index, array) {
           var keyPart = JSON.stringify(key) + ": "
-          var value = _stringify(obj[key], nextIndent, keyPart.length)
+          var value = _stringify(obj[key], nextIndent,
+                                 keyPart.length + comma(array, index))
           if (value !== undefined) {
             items.push(keyPart + value)
           }
