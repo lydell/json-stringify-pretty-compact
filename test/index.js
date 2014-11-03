@@ -148,6 +148,59 @@ suite("stringify", function() {
   })
 
 
+  test("account for commas in objects", function() {
+    var obj = {
+      "a": [1, 2, 3],
+      "b": [1, 2, 3]
+    }
+
+    testStringify(obj, [
+      '{',
+      '  "a": [1, 2, 3],',
+      '  "b": [1, 2, 3]',
+      '}'
+    ], {maxLength: 17})
+
+    testStringify(obj, [
+      '{',
+      '  "a": [',
+      '    1,',
+      '    2,',
+      '    3',
+      '  ],',
+      '  "b": [1, 2, 3]',
+      '}'
+    ], {maxLength: 16})
+  })
+
+
+  test("account for commas in arrays", function() {
+    var obj = [
+      [1, 2, 3],
+      [1, 2, 3]
+    ]
+
+    testStringify(obj, [
+      '[',
+      '  [1, 2, 3],',
+      '  [1, 2, 3]',
+      ']'
+    ], {maxLength: 12})
+
+    testStringify(obj, [
+      '[',
+      '  [',
+      '    1,',
+      '    2,',
+      '    3',
+      '  ],',
+      '  [1, 2, 3]',
+      ']'
+    ], {maxLength: 11})
+
+  })
+
+
   test("Date", function() {
     testStringify(new Date(1337), '"1970-01-01T00:00:01.337Z"')
     testStringify(new Date(1337), '"1970-01-01T00:00:01.337Z"', {maxLength: 0})
