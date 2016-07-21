@@ -11,7 +11,7 @@ function stringify(obj, options) {
       obj = obj.toJSON()
     }
 
-    var string = JSON.stringify(obj)
+    var string = JSON.stringify(obj, options.replacer || null)
 
     if (string === undefined) {
       return string
