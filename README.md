@@ -1,4 +1,4 @@
-Overview [![Build Status](https://travis-ci.org/lydell/json-stringify-pretty-compact.png?branch=master)](https://travis-ci.org/lydell/json-stringify-pretty-compact)
+Overview [![Build Status](https://travis-ci.org/lydell/json-stringify-pretty-compact.svg?branch=master)](https://travis-ci.org/lydell/json-stringify-pretty-compact) [![JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 ========
 
 The output of `JSON.stringify` comes in two flavors: _compact_ and _pretty._ The
@@ -40,8 +40,8 @@ var stringify = require("json-stringify-pretty-compact")
 Usage
 =====
 
-`stringify(obj, options)`
--------------------------
+`stringify(obj, [options])`
+---------------------------
 
 It’s like `JSON.stringify(obj, null, options.indent)`, except that objects and
 arrays are on one line if they fit (according to `options.maxLength`).

@@ -18,10 +18,13 @@
     "formatter"
   ],
   "scripts": {
-    "test": "mocha"
+    "lint": "standard",
+    "unit": "mocha --ui tdd",
+    "test": "npm run lint && npm run unit"
   },
   "devDependencies": {
-    "mocha": "^2.0.1",
-    "chai": "^1.9.2"
+    "chai": "^3.5.0",
+    "mocha": "^3.0.2",
+    "standard": "^8.0.0"
   }
 }
