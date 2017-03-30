@@ -1,3 +1,8 @@
+### Version 1.0.3 (2017-03-30) ###
+
+- No code changes. Just trying to get the readme to show on npmjs.com.
+
+
 ### Version 1.0.2 (2016-09-08) ###
 
 - Improved: Limited npm package contents for a smaller download.
