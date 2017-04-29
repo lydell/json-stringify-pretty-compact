@@ -1,3 +1,9 @@
+### Version 1.0.4 (2017-04-29) ###
+
+- Fixed: String contents are no longer accidentally modified in some cases.
+  Thanks to @powellquiring!
+
+
 ### Version 1.0.3 (2017-03-30) ###
 
 - No code changes. Just trying to get the readme to show on npmjs.com.
