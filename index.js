@@ -70,7 +70,7 @@ function stringify (obj, options) {
 // working on the output of `JSON.stringify` we know that only valid strings
 // are present (unless the user supplied a weird `options.indent` but in
 // that case we don’t care since the output would be invalid anyway).
-var stringOrChar = /("(?:[^"]|\\.)*")|[:,]/g
+var stringOrChar = /("(?:[^\\"]|\\.)*")|[:,]/g
 
 function prettify (string) {
   return string.replace(stringOrChar, function (match, string) {

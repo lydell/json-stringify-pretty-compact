@@ -49,6 +49,12 @@ suite('stringify', function () {
     testStringify({toJSON: Function.prototype}, undefined)
   })
 
+  test('does not touch string values', function () {
+    testStringify('{"{s:0}}', '"{\\"{s:0}}"')
+    testStringify(['{"{s:0}}'], '["{\\"{s:0}}"]')
+    testStringify({'{"{s:0}}': 1}, '{"{\\"{s:0}}": 1}')
+  })
+
   test('different lengths', function () {
     var obj = {bool: true, array: [1, 2, 3], null: null}
 
