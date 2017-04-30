@@ -284,6 +284,56 @@ suite('stringify', function () {
       '  "spouse": null',
       '}'
     ])
+    testStringify({
+      'firstName': 'John',
+      'lastName': 'Smith',
+      'isAlive': true,
+      'age': 25,
+      'height_cm': 167.6,
+      'address': {
+        'streetAddress': '21 2nd Street',
+        'city': 'New York',
+        'state': 'NY',
+        'postalCode': '10021-3100'
+      },
+      'phoneNumbers': [
+        {
+          'type': 'home',
+          'number': '212 555-1234'
+        },
+        {
+          'type': 'office',
+          'number': '646 555-4567'
+        }
+      ],
+      'children': [],
+      'spouse': null
+    }, [
+      '{',
+      '  "firstName": "John",',
+      '  "lastName": "Smith",',
+      '  "isAlive": true,',
+      '  "age": 25,',
+      '  "height_cm": 167.6,',
+      '  "address": {',
+      '    "streetAddress": "21 2nd Street",',
+      '    "city": "New York",',
+      '    "state": "NY",',
+      '    "postalCode": "10021-3100"',
+      '  },',
+      '  "phoneNumbers": [',
+      '    {"type": "home", "number": "212 555-1234"},',
+      '    {"type": "office", "number": "646 555-4567"}',
+      '  ],',
+      '  "children": [],',
+      '  "spouse": null',
+      '}'
+    ], {
+      maxLength: 1,
+      overrideMaxLength: function (obj) {
+        return typeof obj === 'object' && obj !== null && obj.hasOwnProperty('type')
+      }
+    })
   })
 
   test('creationix', function () {

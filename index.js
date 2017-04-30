@@ -5,6 +5,7 @@ function stringify (obj, options) {
   options = options || {}
   var indent = JSON.stringify([1], null, get(options, 'indent', 2)).slice(2, -3)
   var maxLength = (indent === '' ? Infinity : get(options, 'maxLength', 80))
+  var overrideMaxLength = get(options, 'overrideMaxLength', function () { return false })
 
   return (function _stringify (obj, currentIndent, reserved) {
     if (obj && typeof obj.toJSON === 'function') {
@@ -17,7 +18,7 @@ function stringify (obj, options) {
       return string
     }
 
-    var length = maxLength - currentIndent.length - reserved
+    var length = overrideMaxLength(obj) ? Infinity : maxLength - currentIndent.length - reserved
 
     if (string.length <= length) {
       var prettified = prettify(string)
