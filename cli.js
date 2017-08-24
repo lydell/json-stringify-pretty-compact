@@ -3,7 +3,7 @@
 const stringify = require('.')
 const minimist = require('minimist')
 
-var argv = require('minimist')(process.argv.slice(2))
+var argv = minimist(process.argv.slice(2))
 
 if (argv.help) {
   console.log('Usage: jspc [--indent=chars_to_indent] [--maxLength=max_line_length]')
