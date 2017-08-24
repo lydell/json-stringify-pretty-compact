@@ -59,6 +59,27 @@ arrays are on one line if they fit (according to `options.maxLength`).
 `stringify(obj, {maxLength: Infinity})` gives the exact same result as
 `JSON.stringify(obj)`, except that there are spaces after colons and commas.
 
+Command Line
+============
+
+This module also makes available the `jspc` command line utility.  This utility reads JSON from stdin and writes the
+[reformatted] JSON to stdout.
+
+E.g.
+
+```shell
+$ echo -e '{\n"Hello":\n"World"\n}' | jspc
+{"Hello": "World"}
+```
+
+With options:
+
+```shell
+$ echo -e '{\n"Hello":\n"World"\n}' | jspc --indent=4 --maxLength=12
+{
+      "Hello": "World"
+}
+```
 
 License
 =======

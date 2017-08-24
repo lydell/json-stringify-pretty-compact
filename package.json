@@ -29,5 +29,11 @@
     "chai": "^3.5.0",
     "mocha": "^3.2.0",
     "standard": "^9.0.2"
+  },
+  "bin": {
+    "jspc": "./cli.js"
+  },
+  "dependencies": {
+    "minimist": "1.2.0"
   }
 }
