@@ -82,4 +82,8 @@ function get (options, name, defaultValue) {
   return (name in options ? options[name] : defaultValue)
 }
 
-module.exports = stringify
+if (typeof module !== 'undefined') {
+  module.exports = stringify
+} else if (typeof window !== 'undefined') {
+  window.stringify = stringify;
+}
