@@ -32,10 +32,17 @@ Installation
 
 `npm install json-stringify-pretty-compact`
 
+#### Node.js
+
 ```js
 var stringify = require("json-stringify-pretty-compact")
 ```
 
+#### Browser
+
+```html
+<script src="node_modules/json-stringify-pretty-compact/index.js">
+```
 
 Usage
 =====
