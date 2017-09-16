@@ -85,5 +85,5 @@ function get (options, name, defaultValue) {
 if (typeof module !== 'undefined') {
   module.exports = stringify
 } else if (typeof window !== 'undefined') {
-  window.stringify = stringify;
+  window.stringify = stringify
 }
