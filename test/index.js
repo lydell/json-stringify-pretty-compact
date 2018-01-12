@@ -50,6 +50,7 @@ suite('stringify', function () {
     testStringify('{"{s:0}}', '"{\\"{s:0}}"')
     testStringify(['{"{s:0}}'], '["{\\"{s:0}}"]')
     testStringify({'{"{s:0}}': 1}, '{"{\\"{s:0}}": 1}')
+    testStringify({'{"{s:0}}': 1}, '{ "{\\"{s:0}}": 1 }', {margins: true})
   })
 
   test('different lengths', function () {
