@@ -81,8 +81,7 @@ function prettify (string, addMargin) {
     ':': ': '
   }
   return string.replace(stringOrChar, function (match, string) {
-    if (string) return match
-    return tokens[match]
+    return string ? match : tokens[match]
   })
 }
 

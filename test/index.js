@@ -404,6 +404,7 @@ suite('stringify', function () {
 
   suite('options.margins', function () {
     var obj = {a: [1]}
+
     test('if missing, defaults to false', function () {
       expect(stringify(obj))
         .to.equal('{"a": [1]}')
