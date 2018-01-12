@@ -4,6 +4,7 @@
 function stringify (obj, options) {
   options = options || {}
   var indent = JSON.stringify([1], null, get(options, 'indent', 2)).slice(2, -3)
+  var addMargin = get(options, 'margins', false)
   var maxLength = (indent === '' ? Infinity : get(options, 'maxLength', 80))
 
   return (function _stringify (obj, currentIndent, reserved) {
@@ -20,7 +21,7 @@ function stringify (obj, options) {
     var length = maxLength - currentIndent.length - reserved
 
     if (string.length <= length) {
-      var prettified = prettify(string)
+      var prettified = prettify(string, addMargin)
       if (prettified.length <= length) {
         return prettified
       }
@@ -70,11 +71,21 @@ function stringify (obj, options) {
 // working on the output of `JSON.stringify` we know that only valid strings
 // are present (unless the user supplied a weird `options.indent` but in
 // that case we don’t care since the output would be invalid anyway).
-var stringOrChar = /("(?:[^\\"]|\\.)*")|[:,]/g
+var stringOrChar = /("(?:[^\\"]|\\.)*")|[:,\][}{]/g
 
-function prettify (string) {
+function prettify (string, addMargin) {
+  var m = addMargin ? ' ' : ''
+  var tokens = {
+    '{': '{' + m,
+    '[': '[' + m,
+    '}': m + '}',
+    ']': m + ']',
+    ',': ', ',
+    ':': ': '
+  }
   return string.replace(stringOrChar, function (match, string) {
-    return string ? match : match + ' '
+    if (string) return match
+    return tokens[match]
   })
 }
 

@@ -404,4 +404,22 @@ suite('stringify', function () {
       testMaxLength(NaN)
     })
   })
+
+  suite('options.margins', function () {
+    var obj = {a: [1]}
+    test('if missing, defaults to false', function () {
+      expect(stringify(obj))
+        .to.equal('{"a": [1]}')
+    })
+
+    test('if false, does not add spaces inside delimiters', function () {
+      expect(stringify(obj, { margins: false }))
+        .to.equal('{"a": [1]}')
+    })
+
+    test('if true, adds one space inside delimiters', function () {
+      expect(stringify(obj, { margins: true }))
+        .to.equal('{ "a": [ 1 ] }')
+    })
+  })
 })
