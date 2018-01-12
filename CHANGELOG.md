@@ -1,3 +1,8 @@
+### Version 1.1.0 (2018-01-12) ###
+
+- Added: The `margins` option. Thanks to @randallsquared!
+
+
 ### Version 1.0.4 (2017-04-29) ###
 
 - Fixed: String contents are no longer accidentally modified in some cases.
