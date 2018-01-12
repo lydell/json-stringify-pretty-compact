@@ -1,6 +1,3 @@
-// Copyright 2014, 2016 Simon Lydell
-// X11 (“MIT”) Licensed. (See LICENSE.)
-
 function stringify (obj, options) {
   options = options || {}
   var indent = JSON.stringify([1], null, get(options, 'indent', 2)).slice(2, -3)

@@ -63,4 +63,4 @@ arrays are on one line if they fit (according to `options.maxLength`).
 License
 =======
 
-[The X11 (“MIT”) License](LICENSE).
+[MIT](LICENSE).

@@ -1,6 +1,3 @@
-// Copyright 2014, 2016 Simon Lydell
-// X11 (“MIT”) Licensed. (See LICENSE.)
-
 /* eslint-env mocha */
 
 var expect = require('chai').expect
