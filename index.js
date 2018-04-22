@@ -1,7 +1,7 @@
 function stringify (obj, options) {
   options = options || {}
   var JSONstringify = get(options, 'stringify', JSON.stringify)
-  var indent = JSONstringify([1], null, get(options, 'indent', 2)).slice(2, -3)
+  var indent = JSON.stringify([1], null, get(options, 'indent', 2)).slice(2, -3)
   var addMargin = get(options, 'margins', false)
   var maxLength = (indent === '' ? Infinity : get(options, 'maxLength', 80))
 
