@@ -7,7 +7,8 @@
   "main": "index.js",
   "repository": "lydell/json-stringify-pretty-compact",
   "files": [
-    "index.js"
+    "index.js",
+    "index.d.ts"
   ],
   "keywords": [
     "JSON",
