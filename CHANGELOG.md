@@ -1,3 +1,8 @@
+### Version 1.2.0 (2018-04-22) ###
+
+- Added: TypeScript definition. Thanks to @domoritz!
+
+
 ### Version 1.1.0 (2018-01-12) ###
 
 - Added: The `margins` option. Thanks to @randallsquared!
