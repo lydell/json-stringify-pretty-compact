@@ -56,6 +56,8 @@ arrays are on one line if they fit (according to `options.maxLength`).
   and braces:
   - `false`: `{"a": [1]}`
   - `true`: `{ "a": [ 1 ] }`
+- stringify: Defaults to `JSON.stringify`. Use this to customize the JSON
+  stringify implementation.
 
 `stringify(obj, {maxLength: 0, indent: indent})` gives the exact same result as
 `JSON.stringify(obj, null, indent)`.
