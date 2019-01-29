@@ -1,8 +1,43 @@
+function isObject (obj) {
+  return typeof obj === 'object' && obj !== null
+}
+
+function forEach (obj, cb) {
+  if (Array.isArray(obj)) {
+    obj.forEach(cb)
+  } else if (isObject(obj)) {
+    Object.keys(obj).forEach(function (key) {
+      var val = obj[key]
+      cb(val, key)
+    })
+  }
+}
+
+function getTreeDepth (obj) {
+  var depth = 0
+
+  if (Array.isArray(obj) || isObject(obj)) {
+    forEach(obj, function (val) {
+      if (Array.isArray(val) || isObject(val)) {
+        var tmpDepth = getTreeDepth(val)
+        if (tmpDepth > depth) {
+          depth = tmpDepth
+        }
+      }
+    })
+
+    return depth + 1
+  }
+
+  return depth
+}
+
 function stringify (obj, options) {
   options = options || {}
   var indent = JSON.stringify([1], null, get(options, 'indent', 2)).slice(2, -3)
   var addMargin = get(options, 'margins', false)
   var maxLength = (indent === '' ? Infinity : get(options, 'maxLength', 80))
+  var maxNesting = get(options, 'maxNesting', Infinity)
 
   return (function _stringify (obj, currentIndent, reserved) {
     if (obj && typeof obj.toJSON === 'function') {
@@ -17,14 +52,15 @@ function stringify (obj, options) {
 
     var length = maxLength - currentIndent.length - reserved
 
-    if (string.length <= length) {
+    var treeDepth = getTreeDepth(obj)
+    if (treeDepth <= maxNesting && string.length <= length) {
       var prettified = prettify(string, addMargin)
       if (prettified.length <= length) {
         return prettified
       }
     }
 
-    if (typeof obj === 'object' && obj !== null) {
+    if (isObject(obj)) {
       var nextIndent = currentIndent + indent
       var items = []
       var delimiters

@@ -52,6 +52,32 @@ arrays are on one line if they fit (according to `options.maxLength`).
   `JSON.stringify`.
 - maxLength: Defaults to 80. Lines will be tried to be kept at maximum this many
   characters long.
+- maxNesting: Defaults to `Infinity`. The maximum amount of allowed inline nesting for objects or arrays
+
+    By default, the output can contain arbitrary amount of nested structures (as long as
+    the maxLength is not exceeded), like below:
+
+    ```json
+    {"a": [{"b": ["test1", "test2"]}, {"c": true}]}}
+    ```
+
+    When maxNesting is set to `0`, the output doesn't allow any nesting:
+    ```json
+    {
+      "a": [
+        {
+          "b": [
+            "test1",
+            "test2"
+          ]
+        },
+        {
+          "c": true
+        }
+      ]
+    }
+    ```
+
 - margins: Defaults to `false`. Whether or not to add “margins” around brackets
   and braces:
   - `false`: `{"a": [1]}`

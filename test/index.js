@@ -4,6 +4,10 @@ var expect = require('chai').expect
 
 var stringify = require('../')
 
+function lines (string) {
+  return string.split('\n')
+}
+
 function testStringify (obj, expected, options) {
   var actual = stringify(obj, options)
 
@@ -363,8 +367,6 @@ suite('stringify', function () {
   })
 
   suite('options.maxLength', function () {
-    var lines = function (string) { return string.split('\n') }
-
     // Returns a value that represented as compact JSON is `length` characters
     // long: `["aaa...a"]`
     var jsonValueOfLength = function (length) {
@@ -419,6 +421,58 @@ suite('stringify', function () {
     test('if true, adds one space inside delimiters', function () {
       expect(stringify(obj, { margins: true }))
         .to.equal('{ "a": [ 1 ] }')
+    })
+  })
+
+  suite('options.maxNesting', function () {
+    var nested1 = {
+      a: {
+        b: {
+          c: true
+        }
+      }
+    }
+
+    test('if missing, defaults to Infinity', function () {
+      // We are not limiting the nesting, and width will not exceed the default 80, so
+      // by default this whole object would be printed as a oneliner
+      expect(lines(stringify(nested1)))
+        .to.have.length(1)
+      expect(lines(stringify(nested1, {maxNesting: 0})))
+        .to.have.length(7)
+    })
+
+    test('increasing the allowed level of nesting should return more inlined output', function () {
+      expect(lines(stringify(nested1, {maxNesting: 1})))
+        .to.have.length(5)
+      expect(lines(stringify(nested1, {maxNesting: 2})))
+        .to.have.length(3)
+      expect(lines(stringify(nested1, {maxNesting: 3})))
+        .to.have.length(1)
+    })
+
+    var nested2 = {
+      a: [
+        {
+          b: ['test1', 'test2']
+        },
+        {
+          c: true
+        }
+      ]
+    }
+
+    test('arrays and objects both are taken into account', function () {
+      expect(lines(stringify(nested2, {maxNesting: 0})))
+        .to.have.length(13)
+      expect(lines(stringify(nested2, {maxNesting: 1})))
+        .to.have.length(8)
+      expect(lines(stringify(nested2, {maxNesting: 2})))
+        .to.have.length(6)
+      expect(lines(stringify(nested2, {maxNesting: 3})))
+        .to.have.length(3)
+      expect(lines(stringify(nested2, {maxNesting: 4})))
+        .to.have.length(1)
     })
   })
 })
