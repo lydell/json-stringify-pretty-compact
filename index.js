@@ -2,6 +2,8 @@ function stringify (obj, options) {
   options = options || {}
   var indent = JSON.stringify([1], null, get(options, 'indent', 2)).slice(2, -3)
   var addMargin = get(options, 'margins', false)
+  var addArrayMargin = get(options, 'arrayMargins', false)
+  var addObjectMargin = get(options, 'objectMargins', false)
   var maxLength = (indent === '' ? Infinity : get(options, 'maxLength', 80))
 
   return (function _stringify (obj, currentIndent, reserved) {
@@ -16,9 +18,12 @@ function stringify (obj, options) {
     }
 
     var length = maxLength - currentIndent.length - reserved
-
     if (string.length <= length) {
-      var prettified = prettify(string, addMargin)
+      var prettified = prettify(string, {
+        addMargin: addMargin,
+        addArrayMargin: addArrayMargin,
+        addObjectMargin: addObjectMargin
+      })
       if (prettified.length <= length) {
         return prettified
       }
@@ -70,16 +75,28 @@ function stringify (obj, options) {
 // that case we don’t care since the output would be invalid anyway).
 var stringOrChar = /("(?:[^\\"]|\\.)*")|[:,\][}{]/g
 
-function prettify (string, addMargin) {
-  var m = addMargin ? ' ' : ''
+function prettify (string, options) {
+  options = options || {}
+
   var tokens = {
-    '{': '{' + m,
-    '[': '[' + m,
-    '}': m + '}',
-    ']': m + ']',
+    '{': '{',
+    '}': '}',
+    '[': '[',
+    ']': ']',
     ',': ', ',
     ':': ': '
   }
+
+  if (options.addMargin || options.addObjectMargin) {
+    tokens['{'] = '{ '
+    tokens['}'] = ' }'
+  }
+
+  if (options.addMargin || options.addArrayMargin) {
+    tokens['['] = '[ '
+    tokens[']'] = ' ]'
+  }
+
   return string.replace(stringOrChar, function (match, string) {
     return string ? match : tokens[match]
   })

@@ -420,5 +420,38 @@ suite('stringify', function () {
       expect(stringify(obj, { margins: true }))
         .to.equal('{ "a": [ 1 ] }')
     })
+
+    test('adds margins even though arrayMargins and objectMargins are set to false', function () {
+      expect(stringify(obj, { margins: true, arrayMargins: false, objectMargins: false }))
+        .to.equal('{ "a": [ 1 ] }')
+    })
+  })
+
+  suite('options.arrayMargins', function () {
+    var obj = {a: [1]}
+
+    test('if missing, defaults to false', function () {
+      expect(stringify(obj))
+        .to.equal('{"a": [1]}')
+    })
+
+    test('if true, adds margins only on arrays', function () {
+      expect(stringify(obj, { arrayMargins: true }))
+        .to.equal('{"a": [ 1 ]}')
+    })
+  })
+
+  suite('options.objectMargins', function () {
+    var obj = {a: [1]}
+
+    test('if missing, defaults to false', function () {
+      expect(stringify(obj))
+        .to.equal('{"a": [1]}')
+    })
+
+    test('if true, adds margins only on objects', function () {
+      expect(stringify(obj, { objectMargins: true }))
+        .to.equal('{ "a": [1] }')
+    })
   })
 })
