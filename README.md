@@ -52,10 +52,6 @@ arrays are on one line if they fit (according to `options.maxLength`).
   `JSON.stringify`.
 - maxLength: Defaults to 80. Lines will be tried to be kept at maximum this many
   characters long.
-- margins: Defaults to `false`. Whether or not to add “margins” around brackets
-  and braces:
-  - `false`: `{"a": [1]}`
-  - `true`: `{ "a": [ 1 ] }`
 
 `stringify(obj, {maxLength: 0, indent: indent})` gives the exact same result as
 `JSON.stringify(obj, null, indent)`.

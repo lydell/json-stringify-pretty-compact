@@ -50,7 +50,6 @@ suite('stringify', function () {
     testStringify('{"{s:0}}', '"{\\"{s:0}}"')
     testStringify(['{"{s:0}}'], '["{\\"{s:0}}"]')
     testStringify({'{"{s:0}}': 1}, '{"{\\"{s:0}}": 1}')
-    testStringify({'{"{s:0}}': 1}, '{ "{\\"{s:0}}": 1 }', {margins: true})
   })
 
   test('different lengths', function () {
@@ -400,25 +399,6 @@ suite('stringify', function () {
       testMaxLength({})
       testMaxLength(Function)
       testMaxLength(NaN)
-    })
-  })
-
-  suite('options.margins', function () {
-    var obj = {a: [1]}
-
-    test('if missing, defaults to false', function () {
-      expect(stringify(obj))
-        .to.equal('{"a": [1]}')
-    })
-
-    test('if false, does not add spaces inside delimiters', function () {
-      expect(stringify(obj, { margins: false }))
-        .to.equal('{"a": [1]}')
-    })
-
-    test('if true, adds one space inside delimiters', function () {
-      expect(stringify(obj, { margins: true }))
-        .to.equal('{ "a": [ 1 ] }')
     })
   })
 })
