@@ -63,8 +63,12 @@ arrays are on one line if they fit (according to `options.maxLength`).
 `stringify(obj, {maxLength: Infinity})` gives the exact same result as
 `JSON.stringify(obj)`, except that there are spaces after colons and commas.
 
+**Want more options?** Check out [@aitodotai/json-stringify-pretty-compact]!
+
 
 License
 =======
 
 [MIT](LICENSE).
+
+[@aitodotai/json-stringify-pretty-compact]: https://www.npmjs.com/package/@aitodotai/json-stringify-pretty-compact
