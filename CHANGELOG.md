@@ -1,3 +1,14 @@
+### Version 2.0.0 (2019-02-02)
+
+- Removed: The `margins` option. Check out
+  [@aitodotai/json-stringify-pretty-compact] if you miss it. This package is now
+  purely a combination of `JSON.stringify(obj)` and
+  `JSON.stringify(obj, null, 2)` with no additional formatting features on top
+  of that.
+- Added: Support for the [replacer] argument.
+- Changed: Passing `undefined` to options now result in the default value being
+  used. This is to align with how destructuring defaults work in ES2015.
+
 ### Version 1.2.0 (2018-04-22)
 
 - Added: TypeScript definition. Thanks to @domoritz!
@@ -27,3 +38,8 @@
 ### Version 1.0.0 (2014-11-01)
 
 - Initial release.
+
+<!-- prettier-ignore-start -->
+[@aitodotai/json-stringify-pretty-compact]: https://www.npmjs.com/package/@aitodotai/json-stringify-pretty-compact
+[replacer]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#The_replacer_parameter
+<!-- prettier-ignore-end -->
