@@ -22,13 +22,20 @@
     "formatter"
   ],
   "scripts": {
-    "lint": "standard",
-    "unit": "mocha --ui tdd",
-    "test": "npm run lint && npm run unit"
+    "eslint": "eslint .",
+    "eslint:fix": "npm run eslint -- --fix",
+    "prettier": "prettier --write \"**/*.{md,ts}\"",
+    "jest": "jest",
+    "coverage": "jest --coverage",
+    "test": "npm run eslint && npm run coverage",
+    "prepublishOnly": "npm test"
   },
   "devDependencies": {
-    "chai": "^4.1.2",
-    "mocha": "^4.1.0",
-    "standard": "^10.0.3"
+    "eslint": "5.13.0",
+    "eslint-config-lydell": "13.0.0",
+    "eslint-plugin-jest": "22.2.2",
+    "eslint-plugin-prettier": "3.0.1",
+    "jest": "24.0.0",
+    "prettier": "1.16.3"
   }
 }

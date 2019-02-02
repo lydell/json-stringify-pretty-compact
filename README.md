@@ -1,5 +1,4 @@
-Overview [![Build Status](https://travis-ci.org/lydell/json-stringify-pretty-compact.svg?branch=master)](https://travis-ci.org/lydell/json-stringify-pretty-compact) [![JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
-========
+# json-stringify-pretty-compact [![Build Status][travis-badge]][travis-link]
 
 The output of `JSON.stringify` comes in two flavors: _compact_ and _pretty._ The
 former is usually too compact to be read by humans, while the latter sometimes
@@ -7,6 +6,7 @@ is too spacious. This module trades performance (and the “replacer” argument
 for a compromise between the two. The result is a _pretty_ compact string, where
 “pretty” means both “kind of” and “nice”.
 
+<!-- prettier-ignore -->
 ```json
 {
   "bool": true,
@@ -26,22 +26,17 @@ line, unless the line becomes too long (the default maximum is 80 characters).
 Making arrays and objects multi-line is the only attempt made to enforce the
 maximum line length; if that doesn’t help then so be it.
 
+## Installation
 
-Installation
-============
-
-`npm install json-stringify-pretty-compact`
-
-```js
-var stringify = require("json-stringify-pretty-compact")
+```
+npm install json-stringify-pretty-compact
 ```
 
+```js
+const stringify = require("json-stringify-pretty-compact");
+```
 
-Usage
-=====
-
-`stringify(obj, [options])`
----------------------------
+## `stringify(obj, options = {})`
 
 It’s like `JSON.stringify(obj, null, options.indent)`, except that objects and
 arrays are on one line if they fit (according to `options.maxLength`).
@@ -61,10 +56,26 @@ arrays are on one line if they fit (according to `options.maxLength`).
 
 **Want more options?** Check out [@aitodotai/json-stringify-pretty-compact]!
 
+## Development
 
-License
-=======
+You need Node.js 10 and npm 6.
+
+### npm scripts
+
+- `npm run eslint`: Run [ESLint] \(including [Flow] and [Prettier]).
+- `npm run eslint:fix`: Autofix [ESLint] errors.
+- `npm run prettier`: Run [Prettier] for files other than JS.
+- `npm run jest`: Run unit tests. During development, `npm run jest -- --watch`
+  is nice.
+- `npm run coverage`: Run unit tests with code coverage.
+- `npm test`: Check that everything works.
+
+## License
 
 [MIT](LICENSE).
 
+<!-- prettier-ignore-start -->
 [@aitodotai/json-stringify-pretty-compact]: https://www.npmjs.com/package/@aitodotai/json-stringify-pretty-compact
+[travis-badge]: https://travis-ci.org/lydell/json-stringify-pretty-compact.svg?branch=master
+[travis-link]: https://travis-ci.org/lydell/json-stringify-pretty-compact
+<!-- prettier-ignore-end -->
