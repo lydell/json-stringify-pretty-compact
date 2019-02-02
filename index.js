@@ -7,12 +7,12 @@
 var stringOrChar = /("(?:[^\\"]|\\.)*")|[:,]/g;
 
 module.exports = function stringify(passedObj, options) {
-  var indent, maxLength;
+  var indent, maxLength, replacer;
 
   options = options || {};
   indent = JSON.stringify(
     [1],
-    null,
+    undefined,
     options.indent === undefined ? 2 : options.indent
   ).slice(2, -3);
   maxLength =
@@ -21,6 +21,7 @@ module.exports = function stringify(passedObj, options) {
       : options.maxLength === undefined
       ? 80
       : options.maxLength;
+  replacer = options.replacer;
 
   return (function _stringify(obj, currentIndent, reserved) {
     // prettier-ignore
@@ -30,7 +31,7 @@ module.exports = function stringify(passedObj, options) {
       obj = obj.toJSON();
     }
 
-    string = JSON.stringify(obj);
+    string = JSON.stringify(obj, replacer);
 
     if (string === undefined) {
       return string;
@@ -45,6 +46,11 @@ module.exports = function stringify(passedObj, options) {
       if (prettified.length <= length) {
         return prettified;
       }
+    }
+
+    if (replacer != null) {
+      obj = JSON.parse(string);
+      replacer = undefined;
     }
 
     if (typeof obj === "object" && obj !== null) {

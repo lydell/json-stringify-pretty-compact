@@ -2,9 +2,9 @@
 
 The output of `JSON.stringify` comes in two flavors: _compact_ and _pretty._ The
 former is usually too compact to be read by humans, while the latter sometimes
-is too spacious. This module trades performance (and the “replacer” argument)
-for a compromise between the two. The result is a _pretty_ compact string, where
-“pretty” means both “kind of” and “nice”.
+is too spacious. This module trades performance for a compromise between the
+two. The result is a _pretty_ compact string, where “pretty” means both “kind
+of” and “nice”.
 
 <!-- prettier-ignore -->
 ```json
@@ -38,8 +38,9 @@ const stringify = require("json-stringify-pretty-compact");
 
 ## `stringify(obj, options = {})`
 
-It’s like `JSON.stringify(obj, null, options.indent)`, except that objects and
-arrays are on one line if they fit (according to `options.maxLength`).
+It’s like `JSON.stringify(obj, options.replacer, options.indent)`, except that
+objects and arrays are on one line if they fit (according to
+`options.maxLength`).
 
 `options`:
 
@@ -47,9 +48,12 @@ arrays are on one line if they fit (according to `options.maxLength`).
   `JSON.stringify`.
 - maxLength: Defaults to 80. Lines will be tried to be kept at maximum this many
   characters long.
+- replacer: Defaults to undefined. Works exactly like the second parameter of
+  `JSON.stringify`.
 
 `stringify(obj, {maxLength: 0, indent: indent})` gives the exact same result as
-`JSON.stringify(obj, null, indent)`.
+`JSON.stringify(obj, null, indent)`. (However, if you use a `replacer`, integer
+keys might be moved first.)
 
 `stringify(obj, {maxLength: Infinity})` gives the exact same result as
 `JSON.stringify(obj)`, except that there are spaces after colons and commas.

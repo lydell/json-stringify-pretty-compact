@@ -451,4 +451,71 @@ describe("stringify", () => {
       testMaxLength(NaN);
     });
   });
+
+  describe("options.replacer", () => {
+    test("array of keys", () => {
+      const replacer = ["a", "c", 1];
+      const obj = { a: { a: [1, 2], b: 3 }, b: 4, 1: 5 };
+
+      expect(JSON.stringify(obj, replacer, 2)).toMatchInlineSnapshot(`
+{
+  "a": {
+    "a": [
+      1,
+      2
+    ]
+  },
+  "1": 5
+}
+`);
+
+      expect(stringify(obj, { replacer })).toMatchInlineSnapshot(
+        `{"a": {"a": [1, 2]}, "1": 5}`
+      );
+
+      // "1" has moved to the start here compared to standard `JSON.stringify`.
+      // Oh well.
+      expect(stringify(obj, { maxLength: 1, replacer })).toMatchInlineSnapshot(`
+{
+  "1": 5,
+  "a": {
+    "a": [
+      1,
+      2
+    ]
+  }
+}
+`);
+    });
+
+    test("function", () => {
+      const replacerImplementation = (key, value) =>
+        value === 2 || typeof value !== "number" ? value : undefined;
+      const obj = { a: 1, b: [2, 3] };
+
+      const replacer1 = jest.fn().mockImplementation(replacerImplementation);
+      expect(stringify(obj, { replacer: replacer1 })).toMatchInlineSnapshot(
+        `{"b": [2, null]}`
+      );
+      expect(replacer1).toHaveBeenCalledTimes(5);
+
+      const replacer2 = jest.fn().mockImplementation(replacerImplementation);
+      expect(stringify(obj, { replacer: replacer2, maxLength: 1 }))
+        .toMatchInlineSnapshot(`
+{
+  "b": [
+    2,
+    null
+  ]
+}
+`);
+      expect(replacer2).toHaveBeenCalledTimes(5);
+    });
+
+    test("null", () => {
+      expect(
+        stringify({ a: 1, b: [2, 3] }, { replacer: null })
+      ).toMatchInlineSnapshot(`{"a": 1, "b": [2, 3]}`);
+    });
+  });
 });
