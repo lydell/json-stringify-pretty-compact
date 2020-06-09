@@ -25,7 +25,7 @@ module.exports = function stringify(passedObj, options) {
 
   return (function _stringify(obj, currentIndent, reserved) {
     // prettier-ignore
-    var end, index, items, key, keyPart, keys, length, nextIndent, prettified, start, string, value;
+    var end, index, items, subitems, key, keyPart, keys, length, nextIndent, prettified, start, string, value;
 
     if (obj && typeof obj.toJSON === "function") {
       obj = obj.toJSON();
@@ -62,11 +62,26 @@ module.exports = function stringify(passedObj, options) {
         start = "[";
         end = "]";
         length = obj.length;
+        subitems = [];
         for (; index < length; index++) {
-          items.push(
-            _stringify(obj[index], nextIndent, index === length - 1 ? 0 : 1) ||
-              "null"
-          );
+          if (typeof obj[index] === "number") {
+            subitems.push(obj[index]);
+          } else {
+            if (subitems.length > 0) {
+              items.push(subitems.join(", "));
+              subitems = [];
+            }
+            items.push(
+              _stringify(
+                obj[index],
+                nextIndent,
+                index === length - 1 ? 0 : 1
+              ) || "null"
+            );
+          }
+        }
+        if (subitems.length > 0) {
+          items.push(subitems.join(", "));
         }
       } else {
         start = "{";
