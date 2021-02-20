@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+
+      - name: Cache node_modules
+        id: cache-node_modules
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: node_modules-${{ hashFiles('package-lock.json') }}
+
+      - name: npm ci
+        if: steps.cache-node_modules.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: ESLint
+        run: npx --no-install eslint . --report-unused-disable-directives
+
+      - name: Prettier
+        run: npx --no-install prettier --check .
+
+      - name: Jest
+        run: npx --no-install jest --coverage

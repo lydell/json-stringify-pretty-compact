@@ -40,9 +40,12 @@ module.exports = function stringify(passedObj, options) {
     length = maxLength - currentIndent.length - reserved;
 
     if (string.length <= length) {
-      prettified = string.replace(stringOrChar, function(match, stringLiteral) {
-        return stringLiteral || match + " ";
-      });
+      prettified = string.replace(
+        stringOrChar,
+        function (match, stringLiteral) {
+          return stringLiteral || match + " ";
+        }
+      );
       if (prettified.length <= length) {
         return prettified;
       }

@@ -4,8 +4,8 @@ const importedStringify = require(".");
 // Before: `"\\"string\\""`
 // After: `"string"`
 expect.addSnapshotSerializer({
-  test: value => typeof value === "string",
-  print: value => value,
+  test: (value) => typeof value === "string",
+  print: (value) => value,
 });
 
 // Wrapper around the real `stringify` function that also asserts that it
@@ -187,7 +187,10 @@ describe("stringify", () => {
   });
 
   test("account for commas in arrays", () => {
-    const obj = [[1, 2, 3], [1, 2, 3]];
+    const obj = [
+      [1, 2, 3],
+      [1, 2, 3],
+    ];
 
     expect(stringify(obj, { maxLength: 12 })).toMatchInlineSnapshot(`
 [
@@ -218,7 +221,6 @@ describe("stringify", () => {
   });
 
   test("boolean with `.toJSON()`", () => {
-    // eslint-disable-next-line no-new-wrappers
     const bool = new Boolean(true);
 
     expect(JSON.stringify(bool)).toMatchInlineSnapshot(`true`);
@@ -242,8 +244,8 @@ describe("stringify", () => {
   });
 
   test("top-level `.toJSON()` only called once", () => {
-    const toJSON = jest.fn().mockImplementation(() => ({ mappings: "AAAA" }));
-    const sourceMap = { toJSON };
+    const toJSON = jest.fn().mockImplementation(() => ({ mappings: "AAAA" })),
+      sourceMap = { toJSON };
     expect(importedStringify(sourceMap, { maxLength: 0 }))
       .toMatchInlineSnapshot(`
 {
@@ -315,21 +317,25 @@ describe("stringify", () => {
             shape: "polygon",
             fill: "#248",
             stroke: "#48f",
-            points: [[0.5, 47.5], [47.5, 47.5], [47.5, 0.5]],
+            points: [
+              [0.5, 47.5],
+              [47.5, 47.5],
+              [47.5, 0.5],
+            ],
           },
         ],
         solid: {
-          "1": [2, 4],
-          "2": [1],
-          "3": [2],
-          "4": [],
-          "5": [2, 8, 1, 3, 7, 9, 4, 6],
-          "6": [],
-          "7": [4, 8],
-          "8": [],
-          "9": [6, 8],
+          1: [2, 4],
+          2: [1],
+          3: [2],
+          4: [],
+          5: [2, 8, 1, 3, 7, 9, 4, 6],
+          6: [],
+          7: [4, 8],
+          8: [],
+          9: [6, 8],
         },
-        corners: { "1": true, "3": true, "7": false, "9": true },
+        corners: { 1: true, 3: true, 7: false, 9: true },
       })
     ).toMatchInlineSnapshot(`
 {
@@ -454,8 +460,8 @@ describe("stringify", () => {
 
   describe("options.replacer", () => {
     test("array of keys", () => {
-      const replacer = ["a", "c", 1];
-      const obj = { a: { a: [1, 2], b: 3 }, b: 4, 1: 5 };
+      const replacer = ["a", "c", 1],
+        obj = { a: { a: [1, 2], b: 3 }, b: 4, 1: 5 };
 
       expect(JSON.stringify(obj, replacer, 2)).toMatchInlineSnapshot(`
 {
@@ -490,10 +496,9 @@ describe("stringify", () => {
 
     test("function", () => {
       const replacerImplementation = (key, value) =>
-        value === 2 || typeof value !== "number" ? value : undefined;
-      const obj = { a: 1, b: [2, 3] };
-
-      const replacer1 = jest.fn().mockImplementation(replacerImplementation);
+          value === 2 || typeof value !== "number" ? value : undefined,
+        obj = { a: 1, b: [2, 3] },
+        replacer1 = jest.fn().mockImplementation(replacerImplementation);
       expect(stringify(obj, { replacer: replacer1 })).toMatchInlineSnapshot(
         `{"b": [2, null]}`
       );
