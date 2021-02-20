@@ -5,6 +5,7 @@
   "license": "MIT",
   "description": "The best of both `JSON.stringify(obj)` and `JSON.stringify(obj, null, indent)`.",
   "main": "index.js",
+  "types": "index.d.ts",
   "repository": "lydell/json-stringify-pretty-compact",
   "files": [
     "index.js",
