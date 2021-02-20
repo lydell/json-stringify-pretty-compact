@@ -1,3 +1,8 @@
+### Version 3.0.0 (2021-02-20)
+
+- Changed: The TypeScript definition is now closer to `JSON.stringify`. It’s slightly stricter, but I doubt you’ll notice a difference.
+- Added: `"type": "commonjs", "exports": "./index.js", "types": "index.d.ts"` to package.json. I doubt you’ll notice any difference from this either.
+
 ### Version 2.0.0 (2019-02-02)
 
 - Removed: The `margins` option. Check out [@aitodotai/json-stringify-pretty-compact] if you miss it. This package is now purely a combination of `JSON.stringify(obj)` and `JSON.stringify(obj, null, 2)` with no additional formatting features on top of that.
