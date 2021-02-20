@@ -1,4 +1,4 @@
-# json-stringify-pretty-compact [![Build Status][travis-badge]][travis-link]
+# json-stringify-pretty-compact
 
 The output of [JSON.stringify] comes in two flavors: _compact_ and _pretty._ The former is usually too compact to be read by humans, while the latter sometimes is too spacious. This module trades performance for a compromise between the two. The result is a _pretty_ compact string, where “pretty” means both “kind of” and “nice”.
 
@@ -44,28 +44,9 @@ It’s like `JSON.stringify(obj, options.replacer, options.indent)`, except that
 
 **Want more options?** Check out [@aitodotai/json-stringify-pretty-compact]!
 
-## Development
-
-You need Node.js 10 and npm 6.
-
-### npm scripts
-
-- `npm run eslint`: Run [ESLint] \(including [Prettier]).
-- `npm run eslint:fix`: Autofix [ESLint] errors.
-- `npm run prettier`: Run [Prettier] for files other than JS.
-- `npm run jest`: Run unit tests. During development, `npm run jest -- --watch` is nice.
-- `npm run coverage`: Run unit tests with code coverage.
-- `npm test`: Check that everything works.
-
 ## License
 
 [MIT](LICENSE).
 
-<!-- prettier-ignore-start -->
 [@aitodotai/json-stringify-pretty-compact]: https://www.npmjs.com/package/@aitodotai/json-stringify-pretty-compact
-[eslint]: https://eslint.org/
 [json.stringify]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
-[prettier]: https://prettier.io/
-[travis-badge]: https://travis-ci.org/lydell/json-stringify-pretty-compact.svg?branch=master
-[travis-link]: https://travis-ci.org/lydell/json-stringify-pretty-compact
-<!-- prettier-ignore-end -->
