@@ -1,14 +1,12 @@
 declare module "json-stringify-pretty-compact" {
-  const stringify: (
-    object: any,
+  export default function stringify(
+    value: any,
     options?: {
       indent?: number | string;
       maxLength?: number;
       replacer?:
-        | ((key: string, value: any) => any)
-        | (number | string)[]
-        | null;
+        | ((this: any, key: string, value: any) => any)
+        | (number | string)[];
     }
-  ) => string;
-  export = stringify;
+  ): string;
 }
