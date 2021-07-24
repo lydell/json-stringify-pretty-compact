@@ -6,7 +6,7 @@
 // that case we don’t care since the output would be invalid anyway).
 var stringOrChar = /("(?:[^\\"]|\\.)*")|[:,]/g;
 
-module.exports = function stringify(passedObj, options) {
+function stringify(passedObj, options) {
   var indent, maxLength, replacer;
 
   options = options || {};
@@ -100,3 +100,7 @@ module.exports = function stringify(passedObj, options) {
     return string;
   })(passedObj, "", 0);
 };
+
+if (typeof module !== 'undefined') {
+  module.exports = stringify;
+}
