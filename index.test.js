@@ -1,4 +1,5 @@
-const importedStringify = require(".");
+import { jest } from "@jest/globals";
+import importedStringify from ".";
 
 // Make snapshots easier to read.
 // Before: `"\\"string\\""`

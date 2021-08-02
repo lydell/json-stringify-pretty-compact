@@ -1,6 +1,4 @@
-"use strict";
-
-module.exports = {
+export default {
   collectCoverageFrom: ["index.js"],
   coverageThreshold: {
     global: {
@@ -10,4 +8,5 @@ module.exports = {
       statements: 100,
     },
   },
+  transform: {},
 };

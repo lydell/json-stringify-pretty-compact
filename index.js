@@ -1,12 +1,10 @@
-"use strict";
-
 // Note: This regex matches even invalid JSON strings, but since we’re
 // working on the output of `JSON.stringify` we know that only valid strings
 // are present (unless the user supplied a weird `options.indent` but in
 // that case we don’t care since the output would be invalid anyway).
 var stringOrChar = /("(?:[^\\"]|\\.)*")|[:,]/g;
 
-module.exports = function stringify(passedObj, options) {
+export default function stringify(passedObj, options) {
   var indent, maxLength, replacer;
 
   options = options || {};
@@ -99,4 +97,4 @@ module.exports = function stringify(passedObj, options) {
 
     return string;
   })(passedObj, "", 0);
-};
+}

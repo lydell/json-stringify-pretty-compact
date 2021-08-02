@@ -36,4 +36,4 @@ jobs:
         run: npx --no-install prettier --check .
 
       - name: Jest
-        run: npx --no-install jest --coverage
+        run: NODE_OPTIONS=--experimental-vm-modules npx --no-install jest --coverage

@@ -7,12 +7,12 @@ module.exports = {
   rules: {
     "one-var": "error",
   },
+  parserOptions: { sourceType: "module" },
+  env: { es6: true },
   overrides: [
     {
       files: ["*.test.js"],
       extends: ["plugin:jest/recommended", "plugin:jest/style"],
-      parserOptions: { sourceType: "module" },
-      env: { es6: true, jest: true },
       rules: {
         "one-var": "off",
       },
