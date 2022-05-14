@@ -1,26 +1,22 @@
-const importedStringify = require(".");
-
-// Make snapshots easier to read.
-// Before: `"\\"string\\""`
-// After: `"string"`
-expect.addSnapshotSerializer({
-  test: (value) => typeof value === "string",
-  print: (value) => value,
-});
+import { strict as assert } from "node:assert";
+import test from "node:test";
+import importedStringify from "./index.js";
 
 // Wrapper around the real `stringify` function that also asserts that it
 // behaves like `JSON.stringify`.
 function stringify(obj, options) {
   // `stringify(obj, {maxLength: 0, indent: indent})` gives the exact same
   // result as `JSON.stringify(obj, null, indent)`.
-  expect(importedStringify(obj, { maxLength: 0, indent: 2 })).toBe(
+  assert.equal(
+    importedStringify(obj, { maxLength: 0, indent: 2 }),
     JSON.stringify(obj, null, 2)
   );
 
   // `stringify(obj, {maxLength: Infinity})` gives the exact same result as
   // `JSON.stringify(obj)`, except that there are spaces after colons and
   // commas.
-  expect(noSpaces(importedStringify(obj, { maxLength: Infinity }))).toBe(
+  assert.equal(
+    noSpaces(importedStringify(obj, { maxLength: Infinity })),
     noSpaces(JSON.stringify(obj))
   );
 
@@ -31,49 +27,52 @@ function noSpaces(obj) {
   return typeof obj === "string" ? obj.replace(/ /g, "") : obj;
 }
 
-describe("stringify", () => {
-  test("simple values", () => {
-    expect(stringify(null)).toMatchInlineSnapshot(`null`);
-    expect(stringify(true)).toMatchInlineSnapshot(`true`);
-    expect(stringify(false)).toMatchInlineSnapshot(`false`);
-    expect(stringify([])).toMatchInlineSnapshot(`[]`);
-    expect(stringify({})).toMatchInlineSnapshot(`{}`);
-    expect(stringify("string")).toMatchInlineSnapshot(`"string"`);
-    expect(stringify(1)).toMatchInlineSnapshot(`1`);
-    expect(stringify(0.1)).toMatchInlineSnapshot(`0.1`);
-    expect(stringify(-5.2e50)).toMatchInlineSnapshot(`-5.2e+50`);
-  });
+test("simple values", () => {
+  assert.equal(stringify(null), `null`);
+  assert.equal(stringify(true), `true`);
+  assert.equal(stringify(false), `false`);
+  assert.equal(stringify([]), `[]`);
+  assert.equal(stringify({}), `{}`);
+  assert.equal(stringify("string"), `"string"`);
+  assert.equal(stringify(1), `1`);
+  assert.equal(stringify(0.1), `0.1`);
+  assert.equal(stringify(-5.2e50), `-5.2e+50`);
+});
 
-  test("disallowed values", () => {
-    expect(stringify(undefined)).toBeUndefined();
-    expect(stringify(Function)).toBeUndefined();
-    expect(stringify({ toJSON: Function.prototype })).toBeUndefined();
-  });
+test("disallowed values", () => {
+  assert.equal(stringify(undefined), undefined);
+  assert.equal(stringify(Function), undefined);
+  assert.equal(stringify({ toJSON: Function.prototype }), undefined);
+});
 
-  test("does not touch string values", () => {
-    expect(stringify('{"{s:0}}')).toMatchInlineSnapshot(`"{\\"{s:0}}"`);
-    expect(stringify(['{"{s:0}}'])).toMatchInlineSnapshot(`["{\\"{s:0}}"]`);
-    expect(stringify({ '{"{s:0}}': 1 })).toMatchInlineSnapshot(
-      `{"{\\"{s:0}}": 1}`
-    );
-  });
+test("does not touch string values", () => {
+  assert.equal(stringify('{"{s:0}}'), `"{\\"{s:0}}"`);
+  assert.equal(stringify(['{"{s:0}}']), `["{\\"{s:0}}"]`);
+  assert.equal(stringify({ '{"{s:0}}': 1 }), `{"{\\"{s:0}}": 1}`);
+});
 
-  test("different lengths", () => {
-    const obj = { bool: true, array: [1, 2, 3], null: null };
+test("different lengths", () => {
+  const obj = { bool: true, array: [1, 2, 3], null: null };
 
-    expect(stringify(obj)).toMatchInlineSnapshot(
-      `{"bool": true, "array": [1, 2, 3], "null": null}`
-    );
+  assert.equal(
+    stringify(obj),
+    `{"bool": true, "array": [1, 2, 3], "null": null}`
+  );
 
-    expect(stringify(obj, { maxLength: 30 })).toMatchInlineSnapshot(`
+  assert.equal(
+    stringify(obj, { maxLength: 30 }),
+    `
 {
   "bool": true,
   "array": [1, 2, 3],
   "null": null
 }
-`);
+    `.trim()
+  );
 
-    expect(stringify(obj, { maxLength: 15 })).toMatchInlineSnapshot(`
+  assert.equal(
+    stringify(obj, { maxLength: 15 }),
+    `
 {
   "bool": true,
   "array": [
@@ -83,25 +82,27 @@ describe("stringify", () => {
   ],
   "null": null
 }
-`);
+    `.trim()
+  );
 
-    expect(stringify(obj, { maxLength: 15, indent: "\t" })).toBe(
-      JSON.stringify(obj, null, "\t")
-    );
-  });
+  assert.equal(
+    stringify(obj, { maxLength: 15, indent: "\t" }),
+    JSON.stringify(obj, null, "\t")
+  );
+});
 
-  test("sparse array", () => {
-    const array = [];
-    array[3] = true;
-    array[4] = undefined;
-    array[5] = { toJSON: Function.prototype };
-    array[6] = false;
+test("sparse array", () => {
+  const array = [];
+  array[3] = true;
+  array[4] = undefined;
+  array[5] = { toJSON: Function.prototype };
+  array[6] = false;
 
-    expect(stringify(array)).toMatchInlineSnapshot(
-      `[null, null, null, true, null, null, false]`
-    );
+  assert.equal(stringify(array), `[null, null, null, true, null, null, false]`);
 
-    expect(stringify(array, { maxLength: 15 })).toMatchInlineSnapshot(`
+  assert.equal(
+    stringify(array, { maxLength: 15 }),
+    `
 [
   null,
   null,
@@ -111,70 +112,80 @@ describe("stringify", () => {
   null,
   false
 ]
-`);
-  });
+    `.trim()
+  );
+});
 
-  test("“sparse” object", () => {
-    const obj = {
-      a: undefined,
-      b: "long string to make some length",
-      c: { toJSON: Function.prototype },
-    };
+test("“sparse” object", () => {
+  const obj = {
+    a: undefined,
+    b: "long string to make some length",
+    c: { toJSON: Function.prototype },
+  };
 
-    expect(stringify(obj)).toMatchInlineSnapshot(
-      `{"b": "long string to make some length"}`
-    );
+  assert.equal(stringify(obj), `{"b": "long string to make some length"}`);
 
-    expect(stringify(obj, { maxLength: 15 })).toMatchInlineSnapshot(`
+  assert.equal(
+    stringify(obj, { maxLength: 15 }),
+    `
 {
   "b": "long string to make some length"
 }
-`);
-  });
+    `.trim()
+  );
+});
 
-  test("long key name and long value", () => {
-    expect(
-      stringify(
-        {
-          a: true,
-          "long key name": [[1, 2, 3, 4, 5]],
-        },
-        { maxLength: 20 }
-      )
-    ).toMatchInlineSnapshot(`
+test("long key name and long value", () => {
+  assert.equal(
+    stringify(
+      {
+        a: true,
+        "long key name": [[1, 2, 3, 4, 5]],
+      },
+      { maxLength: 20 }
+    ),
+    `
 {
   "a": true,
   "long key name": [
     [1, 2, 3, 4, 5]
   ]
 }
-`);
-  });
+    `.trim()
+  );
+});
 
-  test("empty containers never multiline", () => {
-    expect(stringify({ array: [], object: {} }, { maxLength: 1 }))
-      .toMatchInlineSnapshot(`
+test("empty containers never multiline", () => {
+  assert.equal(
+    stringify({ array: [], object: {} }, { maxLength: 1 }),
+    `
 {
   "array": [],
   "object": {}
 }
-`);
-  });
+    `.trim()
+  );
+});
 
-  test("account for commas in objects", () => {
-    const obj = {
-      a: [1, 2, 3],
-      b: [1, 2, 3],
-    };
+test("account for commas in objects", () => {
+  const obj = {
+    a: [1, 2, 3],
+    b: [1, 2, 3],
+  };
 
-    expect(stringify(obj, { maxLength: 17 })).toMatchInlineSnapshot(`
+  assert.equal(
+    stringify(obj, { maxLength: 17 }),
+    `
 {
   "a": [1, 2, 3],
   "b": [1, 2, 3]
 }
-`);
+    `.trim()
+  );
 
-    expect(stringify(obj, { maxLength: 16 })).toMatchInlineSnapshot(`
+  assert.equal(
+    stringify(obj, { maxLength: 16 }),
+    `
 {
   "a": [
     1,
@@ -183,23 +194,29 @@ describe("stringify", () => {
   ],
   "b": [1, 2, 3]
 }
-`);
-  });
+    `.trim()
+  );
+});
 
-  test("account for commas in arrays", () => {
-    const obj = [
-      [1, 2, 3],
-      [1, 2, 3],
-    ];
+test("account for commas in arrays", () => {
+  const obj = [
+    [1, 2, 3],
+    [1, 2, 3],
+  ];
 
-    expect(stringify(obj, { maxLength: 12 })).toMatchInlineSnapshot(`
+  assert.equal(
+    stringify(obj, { maxLength: 12 }),
+    `
 [
   [1, 2, 3],
   [1, 2, 3]
 ]
-`);
+    `.trim()
+  );
 
-    expect(stringify(obj, { maxLength: 11 })).toMatchInlineSnapshot(`
+  assert.equal(
+    stringify(obj, { maxLength: 11 }),
+    `
 [
   [
     1,
@@ -208,83 +225,87 @@ describe("stringify", () => {
   ],
   [1, 2, 3]
 ]
-`);
-  });
+    `.trim()
+  );
+});
 
-  test("Date", () => {
-    expect(stringify(new Date(1337))).toMatchInlineSnapshot(
-      `"1970-01-01T00:00:01.337Z"`
-    );
-    expect(stringify(new Date(1337), { maxLength: 0 })).toMatchInlineSnapshot(
-      `"1970-01-01T00:00:01.337Z"`
-    );
-  });
+test("Date", () => {
+  assert.equal(stringify(new Date(1337)), `"1970-01-01T00:00:01.337Z"`);
+  assert.equal(
+    stringify(new Date(1337), { maxLength: 0 }),
+    `"1970-01-01T00:00:01.337Z"`
+  );
+});
 
-  test("boolean with `.toJSON()`", () => {
-    const bool = new Boolean(true);
+test("boolean with `.toJSON()`", () => {
+  const bool = new Boolean(true);
 
-    expect(JSON.stringify(bool)).toMatchInlineSnapshot(`true`);
+  assert.equal(JSON.stringify(bool), `true`);
 
-    bool.toJSON = () => "foo";
+  bool.toJSON = () => "foo";
 
-    expect(JSON.stringify(bool)).toMatchInlineSnapshot(`"foo"`);
-    expect(stringify(bool)).toMatchInlineSnapshot(`"foo"`);
-  });
+  assert.equal(JSON.stringify(bool), `"foo"`);
+  assert.equal(stringify(bool), `"foo"`);
+});
 
-  test("tricky strings", () => {
-    expect(
-      stringify({ "key:true": ["1,2", 3, '"k":v'] })
-    ).toMatchInlineSnapshot(`{"key:true": ["1,2", 3, "\\"k\\":v"]}`);
-  });
+test("tricky strings", () => {
+  assert.equal(
+    stringify({ "key:true": ["1,2", 3, '"k":v'] }),
+    `{"key:true": ["1,2", 3, "\\"k\\":v"]}`
+  );
+});
 
-  test("circular objects", () => {
-    const obj = {};
-    obj.obj = obj;
-    expect(() => importedStringify(obj)).toThrow(/circular|cyclic/i);
-  });
+test("circular objects", () => {
+  const obj = {};
+  obj.obj = obj;
+  assert.throws(() => importedStringify(obj), /circular|cyclic/i);
+});
 
-  test("top-level `.toJSON()` only called once", () => {
-    const toJSON = jest.fn().mockImplementation(() => ({ mappings: "AAAA" })),
-      sourceMap = { toJSON };
-    expect(importedStringify(sourceMap, { maxLength: 0 }))
-      .toMatchInlineSnapshot(`
+test("top-level `.toJSON()` only called once", () => {
+  const tracker = new assert.CallTracker();
+  const toJSON = tracker.calls(() => ({ mappings: "AAAA" }), 1);
+  const sourceMap = { toJSON };
+  assert.equal(
+    importedStringify(sourceMap, { maxLength: 0 }),
+    `
 {
   "mappings": "AAAA"
 }
-`);
-    expect(toJSON).toHaveBeenCalledTimes(1);
-  });
+    `.trim()
+  );
+  tracker.verify();
+});
 
-  test("wikipedia", () => {
-    // Taken from:
-    // https://en.wikipedia.org/wiki/JSON
-    expect(
-      stringify({
-        firstName: "John",
-        lastName: "Smith",
-        isAlive: true,
-        age: 25,
-        height_cm: 167.6,
-        address: {
-          streetAddress: "21 2nd Street",
-          city: "New York",
-          state: "NY",
-          postalCode: "10021-3100",
+test("wikipedia", () => {
+  // Taken from:
+  // https://en.wikipedia.org/wiki/JSON
+  assert.equal(
+    stringify({
+      firstName: "John",
+      lastName: "Smith",
+      isAlive: true,
+      age: 25,
+      height_cm: 167.6,
+      address: {
+        streetAddress: "21 2nd Street",
+        city: "New York",
+        state: "NY",
+        postalCode: "10021-3100",
+      },
+      phoneNumbers: [
+        {
+          type: "home",
+          number: "212 555-1234",
         },
-        phoneNumbers: [
-          {
-            type: "home",
-            number: "212 555-1234",
-          },
-          {
-            type: "office",
-            number: "646 555-4567",
-          },
-        ],
-        children: [],
-        spouse: null,
-      })
-    ).toMatchInlineSnapshot(`
+        {
+          type: "office",
+          number: "646 555-4567",
+        },
+      ],
+      children: [],
+      spouse: null,
+    }),
+    `
 {
   "firstName": "John",
   "lastName": "Smith",
@@ -304,40 +325,41 @@ describe("stringify", () => {
   "children": [],
   "spouse": null
 }
-`);
-  });
+    `.trim()
+  );
+});
 
-  test("creationix", () => {
-    // Adapted from:
-    // https://github.com/dscape/clarinet/blob/master/samples/creationix.json
-    expect(
-      stringify({
-        image: [
-          {
-            shape: "polygon",
-            fill: "#248",
-            stroke: "#48f",
-            points: [
-              [0.5, 47.5],
-              [47.5, 47.5],
-              [47.5, 0.5],
-            ],
-          },
-        ],
-        solid: {
-          1: [2, 4],
-          2: [1],
-          3: [2],
-          4: [],
-          5: [2, 8, 1, 3, 7, 9, 4, 6],
-          6: [],
-          7: [4, 8],
-          8: [],
-          9: [6, 8],
+test("creationix", () => {
+  // Adapted from:
+  // https://github.com/dscape/clarinet/blob/master/samples/creationix.json
+  assert.equal(
+    stringify({
+      image: [
+        {
+          shape: "polygon",
+          fill: "#248",
+          stroke: "#48f",
+          points: [
+            [0.5, 47.5],
+            [47.5, 47.5],
+            [47.5, 0.5],
+          ],
         },
-        corners: { 1: true, 3: true, 7: false, 9: true },
-      })
-    ).toMatchInlineSnapshot(`
+      ],
+      solid: {
+        1: [2, 4],
+        2: [1],
+        3: [2],
+        4: [],
+        5: [2, 8, 1, 3, 7, 9, 4, 6],
+        6: [],
+        7: [4, 8],
+        8: [],
+        9: [6, 8],
+      },
+      corners: { 1: true, 3: true, 7: false, 9: true },
+    }),
+    `
 {
   "image": [
     {
@@ -360,110 +382,117 @@ describe("stringify", () => {
   },
   "corners": {"1": true, "3": true, "7": false, "9": true}
 }
-`);
-  });
+    `.trim()
+  );
+});
 
-  describe("options.indent", () => {
-    test("if missing, defaults to 2", () => {
-      expect(stringify([1], { maxLength: 0 })).toMatchInlineSnapshot(`
+test("options.indent: if missing, defaults to 2", () => {
+  assert.equal(
+    stringify([1], { maxLength: 0 }),
+    `
 [
   1
 ]
-`);
-      expect(stringify([1], { indent: undefined, maxLength: 0 }))
-        .toMatchInlineSnapshot(`
+    `.trim()
+  );
+
+  assert.equal(
+    stringify([1], { indent: undefined, maxLength: 0 }),
+    `
 [
   1
 ]
-`);
-    });
+    `.trim()
+  );
+});
 
-    test("otherwise works like `JSON.stringify`", () => {
-      function testIndent(indent) {
-        const obj = [1];
-        expect(stringify(obj, { indent, maxLength: 0 })).toBe(
-          JSON.stringify(obj, null, indent)
-        );
-      }
+test("options.indent: otherwise works like `JSON.stringify`", () => {
+  function testIndent(indent) {
+    const obj = [1];
+    assert.equal(
+      stringify(obj, { indent, maxLength: 0 }),
+      JSON.stringify(obj, null, indent)
+    );
+  }
 
-      testIndent(0);
-      testIndent(1);
-      testIndent(10);
-      testIndent(11);
-      testIndent(-1);
-      testIndent(-Infinity);
-      testIndent(Number(Infinity));
-      testIndent("\t");
-      testIndent('"a');
-      testIndent("123456789012");
-      testIndent("            ");
-      testIndent("");
-      testIndent(null);
-      testIndent({});
-      testIndent(Function);
-      testIndent(NaN);
-    });
-  });
+  testIndent(0);
+  testIndent(1);
+  testIndent(10);
+  testIndent(11);
+  testIndent(-1);
+  testIndent(-Infinity);
+  testIndent(Number(Infinity));
+  testIndent("\t");
+  testIndent('"a');
+  testIndent("123456789012");
+  testIndent("            ");
+  testIndent("");
+  testIndent(null);
+  testIndent({});
+  testIndent(Function);
+  testIndent(NaN);
+});
 
-  describe("options.maxLength", () => {
-    // Returns a value that represented as compact JSON is `length` characters
-    // long: `["aaa...a"]`
-    function jsonValueOfLength(length) {
-      return ["a".repeat(length - '[""]'.length)];
-    }
+// Returns a value that represented as compact JSON is `length` characters
+// long: `["aaa...a"]`
+function jsonValueOfLength(length) {
+  return ["a".repeat(length - '[""]'.length)];
+}
 
-    test("if missing, defaults to 80", () => {
-      expect(stringify(jsonValueOfLength(80))).toMatchInlineSnapshot(
-        `["aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"]`
-      );
-      expect(
-        stringify(jsonValueOfLength(80), { maxLength: undefined })
-      ).toMatchInlineSnapshot(
-        `["aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"]`
-      );
-      expect(stringify(jsonValueOfLength(81))).toMatchInlineSnapshot(`
+test("options.maxLength: if missing, defaults to 80", () => {
+  assert.equal(
+    stringify(jsonValueOfLength(80)),
+    `["aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"]`
+  );
+  assert.equal(
+    stringify(jsonValueOfLength(80), { maxLength: undefined }),
+    `["aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"]`
+  );
+  assert.equal(
+    stringify(jsonValueOfLength(81)),
+    `
 [
   "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 ]
-`);
-    });
+    `.trim()
+  );
+});
 
-    test("isn’t considered when no indentation", () => {
-      expect(
-        stringify(jsonValueOfLength(81), { indent: 0 })
-      ).toMatchInlineSnapshot(
-        `["aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"]`
-      );
-      expect(
-        stringify(jsonValueOfLength(81), { indent: "" })
-      ).toMatchInlineSnapshot(
-        `["aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"]`
-      );
-    });
+test("options.maxLength: isn’t considered when no indentation", () => {
+  assert.equal(
+    stringify(jsonValueOfLength(81), { indent: 0 }),
+    `["aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"]`
+  );
+  assert.equal(
+    stringify(jsonValueOfLength(81), { indent: "" }),
+    `["aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"]`
+  );
+});
 
-    test("invalid values are treated as 0", () => {
-      function testMaxLength(maxLength) {
-        const obj = [1];
-        expect(stringify(obj, { maxLength })).toBe(
-          stringify(obj, { maxLength: 0 })
-        );
-      }
+test("options.maxLength: invalid values are treated as 0", () => {
+  function testMaxLength(maxLength) {
+    const obj = [1];
+    assert.equal(
+      stringify(obj, { maxLength }),
+      stringify(obj, { maxLength: 0 })
+    );
+  }
 
-      testMaxLength(-1);
-      testMaxLength(-Infinity);
-      testMaxLength(null);
-      testMaxLength({});
-      testMaxLength(Function);
-      testMaxLength(NaN);
-    });
-  });
+  testMaxLength(-1);
+  testMaxLength(-Infinity);
+  testMaxLength(null);
+  testMaxLength({});
+  testMaxLength(Function);
+  testMaxLength(NaN);
+});
 
-  describe("options.replacer", () => {
-    test("array of keys", () => {
-      const replacer = ["a", "c", 1],
-        obj = { a: { a: [1, 2], b: 3 }, b: 4, 1: 5 };
+test("options.replacer: array of keys", () => {
+  const replacer = ["a", "c", 1];
+  const obj = { a: { a: [1, 2], b: 3 }, b: 4, 1: 5 };
 
-      expect(JSON.stringify(obj, replacer, 2)).toMatchInlineSnapshot(`
+  assert.equal(
+    JSON.stringify(obj, replacer, 2),
+    `
 {
   "a": {
     "a": [
@@ -473,15 +502,16 @@ describe("stringify", () => {
   },
   "1": 5
 }
-`);
+    `.trim()
+  );
 
-      expect(stringify(obj, { replacer })).toMatchInlineSnapshot(
-        `{"a": {"a": [1, 2]}, "1": 5}`
-      );
+  assert.equal(stringify(obj, { replacer }), `{"a": {"a": [1, 2]}, "1": 5}`);
 
-      // "1" has moved to the start here compared to standard `JSON.stringify`.
-      // Oh well.
-      expect(stringify(obj, { maxLength: 1, replacer })).toMatchInlineSnapshot(`
+  // "1" has moved to the start here compared to standard `JSON.stringify`.
+  // Oh well.
+  assert.equal(
+    stringify(obj, { maxLength: 1, replacer }),
+    `
 {
   "1": 5,
   "a": {
@@ -491,36 +521,38 @@ describe("stringify", () => {
     ]
   }
 }
-`);
-    });
+    `.trim()
+  );
+});
 
-    test("function", () => {
-      const replacerImplementation = (key, value) =>
-          value === 2 || typeof value !== "number" ? value : undefined,
-        obj = { a: 1, b: [2, 3] },
-        replacer1 = jest.fn().mockImplementation(replacerImplementation);
-      expect(stringify(obj, { replacer: replacer1 })).toMatchInlineSnapshot(
-        `{"b": [2, null]}`
-      );
-      expect(replacer1).toHaveBeenCalledTimes(5);
+test("options.replacer: function", () => {
+  const replacerImplementation = (key, value) =>
+    value === 2 || typeof value !== "number" ? value : undefined;
+  const obj = { a: 1, b: [2, 3] };
+  const tracker1 = new assert.CallTracker();
+  const replacer1 = tracker1.calls(replacerImplementation, 5);
+  assert.equal(stringify(obj, { replacer: replacer1 }), `{"b": [2, null]}`);
+  tracker1.verify();
 
-      const replacer2 = jest.fn().mockImplementation(replacerImplementation);
-      expect(stringify(obj, { replacer: replacer2, maxLength: 1 }))
-        .toMatchInlineSnapshot(`
+  const tracker2 = new assert.CallTracker();
+  const replacer2 = tracker2.calls(replacerImplementation, 5);
+  assert.equal(
+    stringify(obj, { replacer: replacer2, maxLength: 1 }),
+    `
 {
   "b": [
     2,
     null
   ]
 }
-`);
-      expect(replacer2).toHaveBeenCalledTimes(5);
-    });
+    `.trim()
+  );
+  tracker2.verify();
+});
 
-    test("null", () => {
-      expect(
-        stringify({ a: 1, b: [2, 3] }, { replacer: null })
-      ).toMatchInlineSnapshot(`{"a": 1, "b": [2, 3]}`);
-    });
-  });
+test("options.replacer: null", () => {
+  assert.equal(
+    stringify({ a: 1, b: [2, 3] }, { replacer: null }),
+    `{"a": 1, "b": [2, 3]}`
+  );
 });

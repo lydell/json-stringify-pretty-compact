@@ -4,7 +4,7 @@
   "author": "Simon Lydell",
   "license": "MIT",
   "description": "The best of both `JSON.stringify(obj)` and `JSON.stringify(obj, null, indent)`.",
-  "type": "commonjs",
+  "type": "module",
   "exports": "./index.js",
   "types": "index.d.ts",
   "repository": "lydell/json-stringify-pretty-compact",
@@ -24,13 +24,11 @@
     "formatter"
   ],
   "scripts": {
-    "test": "eslint . --report-unused-disable-directives && prettier --check . && jest --coverage",
+    "test": "eslint . --report-unused-disable-directives && prettier --check . && node --test",
     "prepublishOnly": "npm test"
   },
   "devDependencies": {
-    "eslint": "7.20.0",
-    "eslint-plugin-jest": "24.1.5",
-    "jest": "26.6.3",
-    "prettier": "2.2.1"
+    "eslint": "8.15.0",
+    "prettier": "2.6.2"
   }
 }
