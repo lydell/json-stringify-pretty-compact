@@ -1,6 +1,6 @@
 {
   "name": "json-stringify-pretty-compact",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "author": "Simon Lydell",
   "license": "MIT",
   "description": "The best of both `JSON.stringify(obj)` and `JSON.stringify(obj, null, indent)`.",

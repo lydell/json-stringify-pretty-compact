@@ -1,3 +1,9 @@
+### Version 4.0.0 (2022-05-14)
+
+- Changed: This is now an [ESM only package]. (I haven’t written that gist, but it’s a great resource.)
+
+  If you need CommonJS, install version 3.0.0. You won’t be missing out on anything: This package is _done._ No more features will be added, and no bugs have been found in years.
+
 ### Version 3.0.0 (2021-02-20)
 
 - Changed: The TypeScript definition is now closer to `JSON.stringify`. It’s slightly stricter, but I doubt you’ll notice a difference.
@@ -37,7 +43,6 @@
 
 - Initial release.
 
-<!-- prettier-ignore-start -->
 [@aitodotai/json-stringify-pretty-compact]: https://www.npmjs.com/package/@aitodotai/json-stringify-pretty-compact
 [replacer]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#The_replacer_parameter
-<!-- prettier-ignore-end -->
+[esm only package]: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c
