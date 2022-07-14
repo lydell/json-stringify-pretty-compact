@@ -8,6 +8,10 @@
   "exports": "./index.js",
   "types": "index.d.ts",
   "repository": "lydell/json-stringify-pretty-compact",
+  "bin": {
+    "json-stringify-pretty-compact": "bin/json-stringify-pretty-compact.js",
+    "json-spc": "bin/json-stringify-pretty-compact.js"
+  },
   "files": [
     "index.js",
     "index.d.ts"
