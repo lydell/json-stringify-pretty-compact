@@ -32,6 +32,8 @@ import stringify from "json-stringify-pretty-compact";
 >
 > If you need CommonJS, install version 3.0.0. You won’t be missing out on anything: This package is _done._ No more features will be added, and no bugs have been found in years.
 
+**Want a CLI?** Check out [avantgardnerio/json-stringify-pretty-compact-cli]!
+
 ## `stringify(obj, options = {})`
 
 It’s like `JSON.stringify(obj, options.replacer, options.indent)`, except that objects and arrays are on one line if they fit (according to `options.maxLength`).
@@ -53,5 +55,6 @@ It’s like `JSON.stringify(obj, options.replacer, options.indent)`, except that
 [MIT](LICENSE).
 
 [@aitodotai/json-stringify-pretty-compact]: https://www.npmjs.com/package/@aitodotai/json-stringify-pretty-compact
+[avantgardnerio/json-stringify-pretty-compact-cli]: https://github.com/avantgardnerio/json-stringify-pretty-compact-cli
 [json.stringify]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
 [esm only package]: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c
