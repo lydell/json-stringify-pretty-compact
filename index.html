@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>json-stringify-pretty-compact</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        font-family: system-ui;
+      }
+
+      form {
+        display: grid;
+        grid-template-areas: "h1" "input" "fieldset" "output" "copy";
+        grid-template-rows: auto 1fr auto 1fr auto;
+        --gap: 0.5em;
+        gap: calc(var(--gap) * 2);
+        padding: calc(var(--gap) * 2);
+        height: 100%;
+      }
+
+      @media (min-width: 50em) {
+        form {
+          grid-template-areas: "h1 h1" "input output" "fieldset copy";
+          grid-template-columns: 1fr 1fr;
+          grid-template-rows: auto 1fr auto;
+        }
+      }
+
+      h1 {
+        grid-area: h1;
+        margin: 0;
+        font-size: clamp(1em, 1em + 1vw, 2em);
+      }
+
+      #input {
+        grid-area: input;
+      }
+
+      fieldset {
+        grid-area: fieldset;
+        margin: 0;
+        display: grid;
+        grid-template-columns: min-content min-content min-content;
+        gap: var(--gap);
+        padding: var(--gap);
+        justify-content: space-between;
+        align-items: baseline;
+        container-type: inline-size;
+      }
+
+      .radio-group label {
+        white-space: nowrap;
+      }
+
+      @container (min-width: 30em) {
+        .radio-group,
+        fieldset > label {
+          white-space: nowrap;
+        }
+      }
+
+      output {
+        grid-area: output;
+        display: grid;
+      }
+
+      #copy {
+        grid-area: copy;
+      }
+
+      textarea {
+        resize: none;
+        font: inherit;
+        font-family: monospace, monospace; /* Doubling it causes browsers not to also make the text smaller. */
+        padding: var(--gap);
+      }
+
+      fieldset,
+      textarea,
+      input[type="number"],
+      button {
+        border: 1px solid currentColor;
+        border-radius: 2px;
+      }
+
+      button {
+        padding: var(--gap);
+        font: inherit;
+      }
+
+      input[type="number"] {
+        font: inherit;
+        width: 5.25ch;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        html {
+          color: #c8c8c8;
+          background: #1e1e1e;
+        }
+
+        a,
+        a:visited {
+          color: #4fc1ff;
+        }
+
+        textarea,
+        input[type="number"] {
+          background: none;
+          color: inherit;
+        }
+
+        button {
+          filter: invert(1);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <form id="form">
+      <h1>
+        <a href="https://github.com/lydell/json-stringify-pretty-compact/"
+          >json-stringify-pretty-compact</a
+        >
+      </h1>
+
+      <textarea id="input"></textarea>
+
+      <fieldset>
+        <div class="radio-group">
+          <label><input type="radio" name="indent" checked /> spaces</label>
+          <label><input type="radio" name="indent" id="tabs" /> tabs</label>
+        </div>
+        <label
+          >indent:
+          <input
+            type="number"
+            inputmode="numeric"
+            id="indent"
+            value="2"
+            min="0"
+        /></label>
+        <label
+          >maxLength:
+          <input
+            type="number"
+            inputmode="numeric"
+            id="maxLength"
+            value="80"
+            min="0"
+        /></label>
+      </fieldset>
+
+      <output for="input">
+        <textarea id="output" readonly></textarea>
+      </output>
+
+      <button type="button" id="copy">Copy to clipboard</button>
+    </form>
+
+    <script type="module">
+      import stringify from "./index.js";
+
+      const update = () => {
+        try {
+          output.value = stringify(JSON.parse(input.value), {
+            indent: tabs.checked ? "\t" : indent.valueAsNumber,
+            maxLength: maxLength.valueAsNumber,
+          });
+          output.style.tabSize = indent.valueAsNumber;
+        } catch (error) {
+          output.value = error.message;
+        }
+      };
+
+      form.oninput = update;
+
+      output.onfocus = () => {
+        // The timeout is needed in Safari.
+        setTimeout(() => {
+          output.select();
+        });
+      };
+
+      // For iOS.
+      const fallbackCopy = async () => {
+        const range = document.createRange();
+        range.selectNodeContents(output);
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+        output.setSelectionRange(0, output.value.length);
+        document.execCommand("copy");
+      };
+
+      const copyOriginalText = copy.textContent;
+      let timeoutId = undefined;
+      copy.onclick = () => {
+        (navigator.clipboard === undefined
+          ? fallbackCopy()
+          : navigator.clipboard.writeText(output.value)
+        )
+          .then(
+            () => {
+              copy.textContent = "Copied!";
+            },
+            (error) => {
+              copy.textContent = "Failed to copy";
+              console.error(error);
+            }
+          )
+          .then(() => {
+            if (timeoutId !== undefined) {
+              clearTimeout(timeoutId);
+            }
+            timeoutId = setTimeout(() => {
+              timeoutId = undefined;
+              copy.textContent = copyOriginalText;
+            }, 1000);
+          });
+      };
+
+      const example = {
+        bool: true,
+        "short array": [1, 2, 3],
+        "long array": [
+          { x: 1, y: 2 },
+          { x: 2, y: 1 },
+          { x: 1, y: 1 },
+          { x: 2, y: 2 },
+        ],
+      };
+
+      input.value = JSON.stringify(example, null, 2);
+      update();
+    </script>
+  </body>
+</html>
