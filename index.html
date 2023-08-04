@@ -136,7 +136,10 @@
 
       <fieldset>
         <div class="radio-group">
-          <label><input type="radio" name="indent" checked /> spaces</label>
+          <label
+            ><input type="radio" name="indent" id="spaces" checked />
+            spaces</label
+          >
           <label><input type="radio" name="indent" id="tabs" /> tabs</label>
         </div>
         <label
@@ -169,6 +172,19 @@
     <script type="module">
       import stringify from "./index.js";
 
+      const localStorageKey = "settings";
+
+      try {
+        const settings = JSON.parse(localStorage.getItem(localStorageKey));
+        if (settings.tabs) {
+          tabs.checked = true;
+        } else {
+          spaces.checked = true;
+        }
+        indent.value = settings.indent;
+        maxLength.value = settings.maxLength;
+      } catch {}
+
       const update = () => {
         try {
           output.value = stringify(JSON.parse(input.value), {
@@ -179,9 +195,31 @@
         } catch (error) {
           output.value = error.message;
         }
+        try {
+          localStorage.setItem(
+            localStorageKey,
+            JSON.stringify({
+              tabs: tabs.checked,
+              indent: indent.valueAsNumber,
+              maxLength: maxLength.valueAsNumber,
+            })
+          );
+        } catch {}
+      };
+
+      const normalize = () => {
+        if (!Number.isFinite(indent.valueAsNumber)) {
+          indent.value = 2;
+        }
+        if (!Number.isFinite(maxLength.valueAsNumber)) {
+          maxLength.value = 80;
+        }
+        update();
       };
 
       form.oninput = update;
+      indent.onblur = normalize;
+      maxLength.onblur = normalize;
 
       output.onfocus = () => {
         // The timeout is needed in Safari.
@@ -240,7 +278,7 @@
       };
 
       input.value = JSON.stringify(example, null, 2);
-      update();
+      normalize();
     </script>
   </body>
 </html>
