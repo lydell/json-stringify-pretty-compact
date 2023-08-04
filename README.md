@@ -34,6 +34,8 @@ import stringify from "json-stringify-pretty-compact";
 
 **Want a CLI?** Check out [avantgardnerio/json-stringify-pretty-compact-cli]!
 
+**Web version?** Check out the [online demo]!
+
 ## `stringify(obj, options = {})`
 
 It’s like `JSON.stringify(obj, options.replacer, options.indent)`, except that objects and arrays are on one line if they fit (according to `options.maxLength`).
@@ -56,5 +58,6 @@ It’s like `JSON.stringify(obj, options.replacer, options.indent)`, except that
 
 [@aitodotai/json-stringify-pretty-compact]: https://www.npmjs.com/package/@aitodotai/json-stringify-pretty-compact
 [avantgardnerio/json-stringify-pretty-compact-cli]: https://github.com/avantgardnerio/json-stringify-pretty-compact-cli
-[json.stringify]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
 [esm only package]: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c
+[json.stringify]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
+[online demo]: https://lydell.github.io/json-stringify-pretty-compact/
