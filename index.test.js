@@ -116,7 +116,7 @@ test("sparse array", () => {
   );
 });
 
-test("“sparse” object", () => {
+test("sparse object", () => {
   const obj = {
     a: undefined,
     b: "long string to make some length",
@@ -458,7 +458,7 @@ test("options.maxLength: if missing, defaults to 80", () => {
   );
 });
 
-test("options.maxLength: isn’t considered when no indentation", () => {
+test("options.maxLength: isn't considered when no indentation", () => {
   assert.equal(
     stringify(jsonValueOfLength(81), { indent: 0 }),
     `["aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"]`
