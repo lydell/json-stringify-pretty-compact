@@ -28,7 +28,7 @@
     "prepublishOnly": "npm test"
   },
   "devDependencies": {
-    "eslint": "8.15.0",
-    "prettier": "2.6.2"
+    "eslint": "8.46.0",
+    "prettier": "3.0.1"
   }
 }
