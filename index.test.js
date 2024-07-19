@@ -261,9 +261,8 @@ test("circular objects", () => {
   assert.throws(() => importedStringify(obj), /circular|cyclic/i);
 });
 
-test("top-level `.toJSON()` only called once", () => {
-  const tracker = new assert.CallTracker();
-  const toJSON = tracker.calls(() => ({ mappings: "AAAA" }), 1);
+test("top-level `.toJSON()` only called once", (t) => {
+  const toJSON = t.mock.fn(() => ({ mappings: "AAAA" }));
   const sourceMap = { toJSON };
   assert.equal(
     importedStringify(sourceMap, { maxLength: 0 }),
@@ -273,7 +272,7 @@ test("top-level `.toJSON()` only called once", () => {
 }
     `.trim()
   );
-  tracker.verify();
+  assert.equal(toJSON.mock.callCount(), 1);
 });
 
 test("wikipedia", () => {
@@ -525,17 +524,15 @@ test("options.replacer: array of keys", () => {
   );
 });
 
-test("options.replacer: function", () => {
+test("options.replacer: function", (t) => {
   const replacerImplementation = (key, value) =>
     value === 2 || typeof value !== "number" ? value : undefined;
   const obj = { a: 1, b: [2, 3] };
-  const tracker1 = new assert.CallTracker();
-  const replacer1 = tracker1.calls(replacerImplementation, 5);
+  const replacer1 = t.mock.fn(replacerImplementation);
   assert.equal(stringify(obj, { replacer: replacer1 }), `{"b": [2, null]}`);
-  tracker1.verify();
+  assert.equal(replacer1.mock.callCount(), 5);
 
-  const tracker2 = new assert.CallTracker();
-  const replacer2 = tracker2.calls(replacerImplementation, 5);
+  const replacer2 = t.mock.fn(replacerImplementation);
   assert.equal(
     stringify(obj, { replacer: replacer2, maxLength: 1 }),
     `
@@ -547,7 +544,7 @@ test("options.replacer: function", () => {
 }
     `.trim()
   );
-  tracker2.verify();
+  assert.equal(replacer2.mock.callCount(), 5);
 });
 
 test("options.replacer: null", () => {
