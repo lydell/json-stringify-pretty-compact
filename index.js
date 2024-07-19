@@ -15,8 +15,8 @@ export default function stringify(passedObj, options = {}) {
     indent === ""
       ? Infinity
       : options.maxLength === undefined
-      ? 80
-      : options.maxLength;
+        ? 80
+        : options.maxLength;
 
   let { replacer } = options;
 
