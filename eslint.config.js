@@ -3,7 +3,7 @@ import js from "@eslint/js";
 export default [
   {
     rules: {
-      ...js.recommended,
+      ...js.configs.recommended.rules,
       curly: "error",
       "no-restricted-syntax": [
         "error",
